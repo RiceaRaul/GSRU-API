@@ -11,7 +11,7 @@ namespace GSRU_DataAccessLayer.Implementations
 
         public UnitOfWork(IConfiguration configuration)
         {
-            string? connectionString = configuration.GetConnectionString("DatabaseConnection");
+            string? connectionString = Environment.GetEnvironmentVariable("GSRU__CONNECTIONSTRINGS__DatabaseConnection");
             if(string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException(connectionString,"DatabaseConnection is null");
 
