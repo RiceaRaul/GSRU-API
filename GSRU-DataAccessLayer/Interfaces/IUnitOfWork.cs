@@ -1,6 +1,7 @@
 ﻿namespace GSRU_DataAccessLayer.Interfaces
 {
-    internal interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
+        void Commit();
     }
 }
