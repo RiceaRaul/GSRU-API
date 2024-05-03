@@ -1,16 +1,17 @@
 using GSRU_DataAccessLayer.Implementations;
 using GSRU_DataAccessLayer.Interfaces;
+using GSRU_Common.Extensions;
 using DotNetEnv;
+
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddEncryptionService();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 var app = builder.Build();
 

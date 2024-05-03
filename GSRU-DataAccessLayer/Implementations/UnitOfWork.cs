@@ -1,13 +1,18 @@
 ﻿using GSRU_DataAccessLayer.Interfaces;
+using GSRU_DataAccessLayer.Repositories;
+using GSRU_DataAccessLayer.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace GSRU_DataAccessLayer.Implementations
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly NpgsqlConnection? _connection;
-        private NpgsqlTransaction? _transaction;
+        private readonly IDbConnection? _connection;
+        private IDbTransaction? _transaction;
+
+        private ITestRepository? _testRepository;
 
         public UnitOfWork(IConfiguration configuration)
         {
@@ -15,9 +20,14 @@ namespace GSRU_DataAccessLayer.Implementations
             if(string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException(connectionString,"DatabaseConnection is null");
 
-            _connection = new NpgsqlConnection(connectionString);
+            _connection = new SqlConnection(connectionString);
             _connection.Open();
             _transaction = _connection.BeginTransaction();
+        }
+
+        public ITestRepository TestRepository
+        {
+            get { return _testRepository ?? (_testRepository = new TestRepository(_transaction)); }
         }
 
         public void Commit()

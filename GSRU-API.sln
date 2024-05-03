@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSRU-API", "GSRU-API\GSRU-API.csproj", "{2BAEB610-1A19-47D7-B133-58125143E155}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GSRU-API", "GSRU-API\GSRU-API.csproj", "{2BAEB610-1A19-47D7-B133-58125143E155}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSRU-DataAccessLayer", "GSRU-DataAccessLayer\GSRU-DataAccessLayer.csproj", "{43F675A6-A709-454D-8A89-9AE42B80FEB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GSRU-DataAccessLayer", "GSRU-DataAccessLayer\GSRU-DataAccessLayer.csproj", "{43F675A6-A709-454D-8A89-9AE42B80FEB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GSRU-API.Models", "GSRU-API.Models\GSRU-API.Models.csproj", "{C9883578-CE27-4541-8CBD-618C87C4A715}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSRU-Common", "GSRU-Common\GSRU-Common.csproj", "{3E4B2958-7649-49E2-9396-95E75C51539F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{43F675A6-A709-454D-8A89-9AE42B80FEB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43F675A6-A709-454D-8A89-9AE42B80FEB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43F675A6-A709-454D-8A89-9AE42B80FEB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9883578-CE27-4541-8CBD-618C87C4A715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9883578-CE27-4541-8CBD-618C87C4A715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9883578-CE27-4541-8CBD-618C87C4A715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9883578-CE27-4541-8CBD-618C87C4A715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E4B2958-7649-49E2-9396-95E75C51539F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E4B2958-7649-49E2-9396-95E75C51539F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E4B2958-7649-49E2-9396-95E75C51539F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E4B2958-7649-49E2-9396-95E75C51539F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
