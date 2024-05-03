@@ -10,13 +10,13 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GSRU-API.Models\GSRU-API.Models.csproj" />
-    <ProjectReference Include="..\GSRU-Common\GSRU-Common.csproj" />
-    <ProjectReference Include="..\GSRU-DataAccessLayer\GSRU-DataAccessLayer.csproj" />
+    <ProjectReference Include="..\GSRU-API.Services\GSRU-API.BusinessLayer.csproj" />
+    <ProjectReference Include="..\GSRU-Common\GSRU-API.Common.csproj" />
   </ItemGroup>
 
 </Project>

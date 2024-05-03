@@ -4,7 +4,7 @@ namespace GSRU_DataAccessLayer.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        ITestRepository TestRepository { get; }
+        IEmployeeRepository EmployeeRepository { get; }
         void Commit();
     }
 }

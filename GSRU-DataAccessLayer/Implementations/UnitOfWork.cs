@@ -1,4 +1,5 @@
-﻿using GSRU_DataAccessLayer.Interfaces;
+﻿using GSRU_API.Common.Encryption.Interfaces;
+using GSRU_DataAccessLayer.Interfaces;
 using GSRU_DataAccessLayer.Repositories;
 using GSRU_DataAccessLayer.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -12,23 +13,28 @@ namespace GSRU_DataAccessLayer.Implementations
         private readonly IDbConnection? _connection;
         private IDbTransaction? _transaction;
 
-        private ITestRepository? _testRepository;
+        private IEmployeeRepository? _employeeRepository;
 
-        public UnitOfWork(IConfiguration configuration)
+        public UnitOfWork(IEncryptionService encryptionService)
         {
             string? connectionString = Environment.GetEnvironmentVariable("GSRU__CONNECTIONSTRINGS__DatabaseConnection");
             if(string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException(connectionString,"DatabaseConnection is null");
-
-            _connection = new SqlConnection(connectionString);
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            _connection = new SqlConnection(encryptionService.Decrypt(connectionString));
             _connection.Open();
             _transaction = _connection.BeginTransaction();
         }
 
-        public ITestRepository TestRepository
+        public IEmployeeRepository EmployeeRepository
         {
-            get { return _testRepository ?? (_testRepository = new TestRepository(_transaction)); }
+            get { return _employeeRepository ??= new EmployeeRepository(_transaction!); }
         }
+
+        private void ResetRepositories()
+        {
+            _employeeRepository = null;
+        }   
 
         public void Commit()
         {
@@ -51,6 +57,7 @@ namespace GSRU_DataAccessLayer.Implementations
                     _transaction.Dispose();
                     _transaction = _connection!.BeginTransaction();
                 }
+                ResetRepositories();
             }
         }
 
@@ -76,6 +83,7 @@ namespace GSRU_DataAccessLayer.Implementations
                     _connection.Dispose();
                 }
             }
+            ResetRepositories();
         }
 
         ~UnitOfWork() {

@@ -1,35 +1,28 @@
-﻿using GSRU_Common.Encryption;
-using GSRU_Common.Encryption.Interfaces;
-using GSRU_DataAccessLayer.Interfaces;
+﻿using GSRU_API.Common.Encryption.Interfaces;
+using GSRU_API.Common.Models;
+using GSRU_API.Common.Models.Authorize;
+using GSRU_API.Services.Interfaces;
+using GSRU_Common.Models.Requests.Employee;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace GSRU_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticateController(IUnitOfWork _unitOfWork, IEncryptionService encryptionService) : ControllerBase
+    public class AuthenticateController(IEmployeeService _employeeService) : BaseController
     {
+        private readonly IEmployeeService _employeeService = _employeeService;
 
-        [HttpGet]
-        public async Task<IActionResult> Register(string data)
-        {
-            
-            var test = encryptionService.Encrypt(data);
-            return Ok(test);
-        }
-/*        [HttpPost]
+
+        [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromForm] LoginModel request)
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(AuthenticationResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Login([FromBody] LoginModel request)
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user is null)
-                return BadRequest("User does not exist");
-
-            if (!await _userManager.CheckPasswordAsync(user, user.Password))
-                return BadRequest("Invalid password");
-
-            var token = await GenerateJwtToken(user);
-            return Ok(token);
-        }*/
+            var result = await _employeeService.Authorize(request);
+            return SetResult(result);
+        }
     }
 }
