@@ -18,45 +18,33 @@ namespace GSRU_DataAccessLayer.Repositories
 
         public async Task<EmployeeDto> Authorize(string username, string password)
         {
-            try
+            var parameters = new DynamicParameters(new
             {
-                var result = await Connection.QueryMultipleAsync(
-                  sql: EMPLOYEE_AUTHORIZE,
-                  param: new { username, password },
-                  commandType: CommandType.StoredProcedure,
-                  commandTimeout: 20,
-                  transaction: Transaction
-                );
-                using (result)
-                {
-                    var employee = await result.ReadFirstAsync<EmployeeDto>();
-                    var roles = await result.ReadAsync<string>();
-                    var teams = await result.ReadAsync<TeamDto>();
-                    employee.Roles = roles;
-                    employee.Teams = teams;
-                    return employee;
-                }
-            }
-            catch(SqlException ex) when (ex.Number == (int)CustomSqlException.UserNotExist || ex.Number == (int)CustomSqlException.PasswordIncorrect)
-            {
-                var enumValue = Enum.Parse<CustomSqlException>(ex.Number.ToString());
-                return GenerateGenericError.Generate<EmployeeDto>(HttpStatusCode.Unauthorized, enumValue.ToDescriptionString());
-            }
-            catch (Exception ex)
-            {
-                return GenerateGenericError.GenerateInternalError<EmployeeDto>(ex.Message);
-            }
+                username,
+                password
+            });
+
+            return await AuthorizeInternal(EMPLOYEE_AUTHORIZE, parameters);
         }
 
         public async Task<EmployeeDto> Authorize(int employeeId)
         {
+            var parameters = new DynamicParameters(new
+            {
+                employee_id = employeeId,
+            });
+
+            return await AuthorizeInternal(EMPLOYEE_AUTHORIZE_BY_ID, parameters);
+        }
+
+
+        private async Task<EmployeeDto> AuthorizeInternal(string store_procedure, DynamicParameters paramters)
+        {
             try
             {
                 var result = await Connection.QueryMultipleAsync(
-                  sql: EMPLOYEE_AUTHORIZE_BY_ID,
-                  param: new { 
-                      employee_id = employeeId,
-                  },
+                  sql: store_procedure,
+                  param: paramters,
                   commandType: CommandType.StoredProcedure,
                   commandTimeout: 20,
                   transaction: Transaction
@@ -78,7 +66,7 @@ namespace GSRU_DataAccessLayer.Repositories
             }
             catch (Exception ex)
             {
-                if(ex.Message.Contains("Sequence contains no elements"))
+                if (ex.Message.Contains("Sequence contains no elements"))
                 {
                     return GenerateGenericError.Generate<EmployeeDto>(HttpStatusCode.NotFound, "EMPLOYEE_NOT_FOUND");
                 }
