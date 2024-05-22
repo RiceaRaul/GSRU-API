@@ -47,7 +47,7 @@ namespace GSRU_API.Services.Implementation
             return new AuthenticationResponse(token, refreshToken, username);
         }
 
-        public Claim[] GetRefreshClaims(string username, string id)
+        public static Claim[] GetRefreshClaims(string username, string id)
         {
             return
             [
