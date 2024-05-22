@@ -11,6 +11,7 @@ namespace GSRU_API.BusinessLayer
         {
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<ITeamService, TeamService>();
             DataAccessLayerConfiguration.RegisterDependencies(services);
         }
     }

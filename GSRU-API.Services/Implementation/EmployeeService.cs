@@ -3,7 +3,9 @@ using GSRU_API.Common.Models;
 using GSRU_API.Common.Models.Authorize;
 using GSRU_API.Common.Models.Employee.Dto;
 using GSRU_API.Services.Interfaces;
+using GSRU_Common.Models.Employee.Responses;
 using GSRU_Common.Models.Requests.Employee;
+using GSRU_Common.Settings;
 using GSRU_DataAccessLayer.Interfaces;
 using System.Security.Claims;
 
@@ -14,7 +16,7 @@ namespace GSRU_API.Services.Implementation
         private readonly IUnitOfWork _unitOfWork = _unitOfWork;
         private readonly IJwtService _jwtService = _jwtService;
         private readonly IEncryptionService _encryptionService = _encryptionService;
-
+        
         public async Task<AuthenticationResponse> Authorize(LoginModel request)
         {
             var passwordEncrypted = _encryptionService.Encrypt(request.Password);
@@ -29,6 +31,30 @@ namespace GSRU_API.Services.Implementation
             return token;
         }
 
+        public async Task<AuthenticationResponse> Authorize(int employee_id)
+        {
+            var employee = await _unitOfWork.EmployeeRepository.Authorize(employee_id);
+            if (employee.ApiError is not null)
+            {
+                return GenerateGenericError.Generate<AuthenticationResponse>(employee.StatusCode, employee.ApiError.Message, employee.ApiError.Data);
+            }
+            var claims = GetClaims(employee);
+            var token = _jwtService.CreateJwt(claims, employee.CompanyEmail);
+
+            return token;
+        }
+
+        public async Task<EmployeeData> GetEmployeeDataById(int employee_id)
+        {
+            var employee = await _unitOfWork.EmployeeRepository.Authorize(employee_id);
+            if (employee.ApiError is not null)
+            {
+                return GenerateGenericError.Generate<EmployeeData>(employee.StatusCode, employee.ApiError.Message, employee.ApiError.Data);
+            }
+
+            return employee;
+        }
+
         private Claim[] GetClaims(EmployeeDto employee)
         {
             List<Claim> claims = [
@@ -38,6 +64,11 @@ namespace GSRU_API.Services.Implementation
             foreach (var role in employee.Roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            foreach(var team in employee.Teams)
+            {
+                claims.Add(new Claim(CustomClaimType.Teams, team.Name));
             }
             return [.. claims];
         }

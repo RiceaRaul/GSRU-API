@@ -5,5 +5,6 @@ namespace GSRU_DataAccessLayer.Repositories.Interfaces
     public interface IEmployeeRepository
     {
         Task<EmployeeDto> Authorize(string username, string password);
+        Task<EmployeeDto> Authorize(int employeeId);
     }
 }

@@ -5,6 +5,7 @@ namespace GSRU_DataAccessLayer.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IEmployeeRepository EmployeeRepository { get; }
+        ITeamsRepository TeamsRepository { get; }
         void Commit();
     }
 }

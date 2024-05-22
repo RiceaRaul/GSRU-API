@@ -66,5 +66,20 @@ namespace GSRU_API.Extensions
                 };
             });
         }
+
+        public static void AddCorsOrigins(this IServiceCollection services, IEnumerable<string> corsOrigins)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder
+                        .WithOrigins(corsOrigins.ToArray())
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
+        }
     }
 }

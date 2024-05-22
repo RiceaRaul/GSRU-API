@@ -14,6 +14,7 @@ namespace GSRU_DataAccessLayer.Implementations
         private IDbTransaction? _transaction;
 
         private IEmployeeRepository? _employeeRepository;
+        private ITeamsRepository? _teamsRepository;
 
         public UnitOfWork(IEncryptionService encryptionService)
         {
@@ -31,9 +32,15 @@ namespace GSRU_DataAccessLayer.Implementations
             get { return _employeeRepository ??= new EmployeeRepository(_transaction!); }
         }
 
+        public ITeamsRepository TeamsRepository
+        {
+            get { return _teamsRepository ??= new TeamsRepository(_transaction!); }
+        }
+
         private void ResetRepositories()
         {
             _employeeRepository = null;
+            _teamsRepository = null;
         }   
 
         public void Commit()

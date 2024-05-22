@@ -16,6 +16,7 @@ namespace GSRU_API.Services.Implementation
         private readonly AppSettings _appSettings = _appSettings.Value;
         private readonly IEncryptionService _encryptionService = _encryptionService;
 
+        public const string RELOAD_JWT_ROLE = "RELOAD-JWT";
         public AuthenticationResponse CreateJwt(Claim[] claim, string username)
         {
             DateTime utcNow = DateTime.UtcNow;
@@ -51,7 +52,7 @@ namespace GSRU_API.Services.Implementation
             return
             [
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, "RELOAD-JWT"),
+                new Claim(ClaimTypes.Role, RELOAD_JWT_ROLE),
                 new Claim(ClaimTypes.Hash, id)
             ];
         }

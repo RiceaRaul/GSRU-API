@@ -1,4 +1,6 @@
-﻿namespace GSRU_API.Common.Models.Employee.Dto
+﻿using GSRU_Common.Models.Teams.Dto;
+
+namespace GSRU_API.Common.Models.Employee.Dto
 {    
     public class EmployeeDto : GenericError<string>
     {
@@ -21,5 +23,6 @@
         public string Address2 { get; init; } = string.Empty;
 
         public IEnumerable<string> Roles { get; set; } = Enumerable.Empty<string>();
+        public IEnumerable<TeamDto> Teams { get; set; } = Enumerable.Empty<TeamDto>();
     }
 }
