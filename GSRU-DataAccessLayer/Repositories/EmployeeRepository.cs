@@ -38,13 +38,13 @@ namespace GSRU_DataAccessLayer.Repositories
         }
 
 
-        private async Task<EmployeeDto> AuthorizeInternal(string store_procedure, DynamicParameters paramters)
+        private async Task<EmployeeDto> AuthorizeInternal(string store_procedure, DynamicParameters parameters)
         {
             try
             {
                 var result = await Connection.QueryMultipleAsync(
                   sql: store_procedure,
-                  param: paramters,
+                  param: parameters,
                   commandType: CommandType.StoredProcedure,
                   commandTimeout: 20,
                   transaction: Transaction
