@@ -13,5 +13,11 @@ namespace GSRU_DataAccessLayer.Common
         UserNotExist = 500001,
         [Description("Password is incorrect")]
         PasswordIncorrect = 500002,
+        [Description("Board does not exist")]
+        BoardNotFound = 500003,
+        [Description("Sprint does not exist")]
+        SprintNotFound = 500004,
+        [Description("Sprint already started")]
+        SprintAlreadyStarted = 500005,
     }
 }

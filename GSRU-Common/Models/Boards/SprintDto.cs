@@ -11,4 +11,10 @@ namespace GSRU_Common.Models.Boards
         public DateTime? EndDate { get; set; }
         public IEnumerable<TaskBackLogDto> Tasks { get; set; } = new List<TaskBackLogDto>();
     }
+
+    public class StartSprintRequest
+    {
+        public int Id { get; set; }
+        public string SprintGoal { get; set; } = string.Empty;
+    }
 }

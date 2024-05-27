@@ -4,6 +4,7 @@ using GSRU_API.Services.Interfaces;
 using GSRU_Common.Models;
 using GSRU_Common.Models.Boards;
 using GSRU_Common.Models.Requests.Tasks;
+using GSRU_Common.Models.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -33,6 +34,57 @@ namespace GSRU_API.Controllers
         public async Task<IActionResult> UpdateTaskSprintAndIndex([FromBody] TaskUpdateSprintAndIndexRequest request)
         {
             var result = await _backLogService.UpdateTaskSprintAndIndexAsync(request);
+            return SetResult(result);
+        }
+
+        [HttpPost]
+        [Route("create-sprint/{team_id:int}")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(GenericResponse<int>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> CreateSprint(int team_id)
+        {
+            var result = await _backLogService.CreateSprint(team_id);
+            return SetResult(result);
+        }
+
+        [HttpPost]
+        [Route("create-task")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(GenericResponse<int>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
+        {
+            request.Reporter = GetUserId();
+            var result = await _backLogService.CreateTask(request);
+            return SetResult(result);
+        }
+
+        [HttpGet]
+        [Route("get-tasks-type")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(TaskTypeStatusResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetTasksType()
+        {
+            var result = await _backLogService.GetTasksType();
+            return SetResult(result);
+        }
+
+        [HttpGet]
+        [Route("get-tasks-status/{board_id:int}")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(TaskTypeStatusResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetTaskStatus(int board_id)
+        {
+            var result = await _backLogService.GetTaskStatus(board_id);
+            return SetResult(result);
+        }
+
+        [HttpPost]
+        [Route("start-sprint")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(GenericResponse<int>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> StartSprint([FromBody] StartSprintRequest request)
+        {
+            var result = await _backLogService.StartSprint(request.Id, request.SprintGoal);
             return SetResult(result);
         }
     }
