@@ -15,6 +15,8 @@ namespace GSRU_DataAccessLayer.Implementations
         private IEmployeeRepository? _employeeRepository;
         private ITeamsRepository? _teamsRepository;
         private IBackLogRepository? _backLogRepository;
+        private IWorkloadRepository? _workloadRepository;
+
         public UnitOfWork(IEncryptionService encryptionService)
         {
             string? connectionString = Environment.GetEnvironmentVariable("GSRU__CONNECTIONSTRINGS__DatabaseConnection");
@@ -41,11 +43,17 @@ namespace GSRU_DataAccessLayer.Implementations
             get { return _backLogRepository ??= new BackLogRepository(_transaction!); }
         }
 
+        public IWorkloadRepository WorkloadRepository
+        {
+            get { return _workloadRepository ??= new WorkloadRepository(_transaction!); }
+        }
+
         private void ResetRepositories()
         {
             _employeeRepository = null;
             _teamsRepository = null;
             _backLogRepository = null;
+            _workloadRepository = null;
         }   
 
         public void Commit()

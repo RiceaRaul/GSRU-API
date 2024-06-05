@@ -7,6 +7,7 @@ namespace GSRU_DataAccessLayer.Interfaces
         IEmployeeRepository EmployeeRepository { get; }
         ITeamsRepository TeamsRepository { get; }
         IBackLogRepository BackLogRepository { get; }
+        IWorkloadRepository WorkloadRepository { get; }
         void Commit();
     }
 }

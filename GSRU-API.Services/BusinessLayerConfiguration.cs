@@ -13,6 +13,7 @@ namespace GSRU_API.BusinessLayer
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IBackLogService, BackLogService>();
+            services.AddScoped<IWorklogService, WorklogService>();
             DataAccessLayerConfiguration.RegisterDependencies(services);
         }
     }

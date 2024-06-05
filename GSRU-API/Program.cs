@@ -4,6 +4,7 @@ using GSRU_API.BusinessLayer;
 using GSRU_API.Common.Settings;
 using GSRU_API.Extensions;
 using GSRU_API.Filters;
+using GSRU_Common.Models;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,9 @@ ArgumentNullException.ThrowIfNull(appSettings);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<RoleAuthorizationFilter>();
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new WorkloadConverter());
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddEncryptionService();
