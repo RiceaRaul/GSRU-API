@@ -6,5 +6,6 @@ namespace GSRU_DataAccessLayer.Repositories.Interfaces
     {
         Task<EmployeeDto> Authorize(string username, string password);
         Task<EmployeeDto> Authorize(int employeeId);
+        Task<IEnumerable<EmployeeDto>> GetEmployeeBySprintId(int sprint_id);
     }
 }

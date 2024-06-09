@@ -7,8 +7,9 @@ namespace GSRU_Common.Models
 {
     public class WorkloadDto
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = -1;
         public string Employee { get; set; } = string.Empty;
+        public int EmployeeId { get; set; }
         public int Hour { get; set; }
         public int Total { get; set; }
         public int Day { get; set; }
@@ -18,8 +19,9 @@ namespace GSRU_Common.Models
     public class Workload : DynamicObject
     {
         private readonly Dictionary<int, double> _properties = [];
-        public int Id { get; set; }
+        public int Id { get; set; } = -1;
         public string Employee { get; set; } = string.Empty;
+        public int EmployeeId { get; set; }
         public int Hour { get; set; }
         public int Total { get; set; }
 
@@ -76,6 +78,8 @@ namespace GSRU_Common.Models
         public override Workload Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var workload = new Workload();
+
+
             while (reader.Read())
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
@@ -87,19 +91,23 @@ namespace GSRU_Common.Models
                 {
                     string propertyName = reader.GetString();
                     reader.Read();
-                    if (propertyName == nameof(Workload.Id))
+                    if (propertyName == ToCamelCase(nameof(Workload.Id)))
                     {
                         workload.Id = reader.GetInt32();
                     }
-                    else if (propertyName == nameof(Workload.Employee))
+                    else if (propertyName == ToCamelCase(nameof(Workload.Employee)))
                     {
                         workload.Employee = reader.GetString();
                     }
-                    else if (propertyName == nameof(Workload.Hour))
+                    else if (propertyName == ToCamelCase(nameof(Workload.EmployeeId)))
+                    {
+                        workload.EmployeeId = reader.GetInt32();
+                    }
+                    else if (propertyName == ToCamelCase(nameof(Workload.Hour)))
                     {
                         workload.Hour = reader.GetInt32();
                     }
-                    else if (propertyName == nameof(Workload.Total))
+                    else if (propertyName == ToCamelCase(nameof(Workload.Total)))
                     {
                         workload.Total = reader.GetInt32();
                     }
@@ -109,6 +117,7 @@ namespace GSRU_Common.Models
                     }
                 }
             }
+            
 
             return workload;
         }
@@ -118,6 +127,7 @@ namespace GSRU_Common.Models
             writer.WriteStartObject();
             writer.WriteNumber(ToCamelCase(nameof(Workload.Id)), value.Id);
             writer.WriteString(ToCamelCase(nameof(Workload.Employee)), value.Employee);
+            writer.WriteNumber(ToCamelCase(nameof(Workload.EmployeeId)), value.EmployeeId);
             writer.WriteNumber(ToCamelCase(nameof(Workload.Hour)), value.Hour);
             writer.WriteNumber(ToCamelCase(nameof(Workload.Total)), value.Total);
 

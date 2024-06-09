@@ -120,10 +120,6 @@ namespace GSRU_DataAccessLayer.Repositories
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Sequence contains no elements"))
-                {
-                    return GenerateGenericError.Generate<GenericResponse<int>>(HttpStatusCode.NotFound, "EMPLOYEE_NOT_FOUND");
-                }
                 return GenerateGenericError.GenerateInternalError<GenericResponse<int>>(ex.Message);
             }
         }

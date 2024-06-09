@@ -15,6 +15,7 @@ namespace GSRU_DataAccessLayer.Repositories
     {
         private const string EMPLOYEE_AUTHORIZE = "employee_authorize";
         private const string EMPLOYEE_AUTHORIZE_BY_ID = "employee_authorize_by_id";
+        private const string EMPLOYEE_BY_SPRINT_ID = "employee_by_sprint_id";
 
         public async Task<EmployeeDto> Authorize(string username, string password)
         {
@@ -72,6 +73,19 @@ namespace GSRU_DataAccessLayer.Repositories
                 }
                 return GenerateGenericError.GenerateInternalError<EmployeeDto>(ex.Message);
             }
+        }
+
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeeBySprintId(int sprint_id)
+        {
+            var result = await Connection.QueryAsync<EmployeeDto>(
+                sql: EMPLOYEE_BY_SPRINT_ID,
+                param: new { sprint_id },
+                commandType: CommandType.StoredProcedure,
+                commandTimeout: 20,
+                transaction: Transaction
+            );
+
+            return result;
         }
     }
 }

@@ -2,14 +2,9 @@
 
 namespace GSRU_DataAccessLayer.Repositories
 {
-    public class RepositoryBase
+    public class RepositoryBase(IDbTransaction transaction)
     {
-        protected IDbTransaction Transaction { get; private set; }
+        protected IDbTransaction Transaction { get; private set; } = transaction;
         protected IDbConnection Connection { get { return Transaction.Connection!; } }
-
-        public RepositoryBase(IDbTransaction transaction)
-        {
-            Transaction = transaction;
-        }
     }
 }
