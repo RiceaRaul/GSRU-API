@@ -310,7 +310,7 @@ namespace GSRU_DataAccessLayer.Repositories
         {
             try
             {
-                var result = await Connection.ExecuteAsync(
+                await Connection.ExecuteAsync(
                     sql: TASKS_CHANGE_STATUS,
                     param: new { id = task_id, status = status_id },
                     commandType: CommandType.StoredProcedure,
