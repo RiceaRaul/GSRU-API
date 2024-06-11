@@ -76,5 +76,7 @@ namespace GSRU_API.Services.Implementation
                 return GenerateGenericError.GenerateInternalError<GenericResponse<bool>>(ex.Message);
             }
         }
+
+
     }
 }

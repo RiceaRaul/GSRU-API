@@ -18,6 +18,13 @@ namespace GSRU_API.Services.Implementation
             return result;
         }
 
+        public async Task<SprintDtoResponse> GetActiveSprint(int boardId)
+        {
+            var result = await _unitOfWork.BackLogRepository.GetActiveSprint(boardId);
+            return result;
+        }
+
+
         public async Task<GenericResponse<int>> UpdateTaskSprintAndIndexAsync(TaskUpdateSprintAndIndexRequest request)
         {
             var result = await _unitOfWork.BackLogRepository.UpdateTaskSprintAndIndexAsync(request);
@@ -57,5 +64,19 @@ namespace GSRU_API.Services.Implementation
             _unitOfWork.Commit();
             return result;
         }
+
+        public async Task<BoardConfigurationDtoResponse> GetBoardConfiguration(int team_id)
+        {
+            var result = await _unitOfWork.BackLogRepository.GetBoardConfiguration(team_id);
+            return result;
+        }
+
+        public async Task<GenericResponse<bool>> UpdateTaskStatusAsync(TaskUpdateStatusRequest request)
+        {
+            var result = await _unitOfWork.BackLogRepository.UpdateTaskStatus(request.TaskId, request.TaskStatus);
+            _unitOfWork.Commit();
+            return result;
+        }
+
     }
 }

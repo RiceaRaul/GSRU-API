@@ -87,5 +87,37 @@ namespace GSRU_API.Controllers
             var result = await _backLogService.StartSprint(request.Id, request.SprintGoal);
             return SetResult(result);
         }
+
+        [HttpGet]
+        [Route("get-active-sprint/{team_id:int}")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(SprintDtoResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetActiveSprint(int team_id)
+        {
+            var result = await _backLogService.GetActiveSprint(team_id);
+            return SetResult(result);
+        }
+
+        [HttpGet]
+        [Route("get-board-configuration/{team_id:int}")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(BoardConfigurationDtoResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBoardConfiguration(int team_id)
+        {
+            var result = await _backLogService.GetBoardConfiguration(team_id);
+            return SetResult(result);
+        }
+
+        [HttpPatch]
+        [Route("update-task-status")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(GenericResponse<bool>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateTaskStatus([FromBody] TaskUpdateStatusRequest request)
+        {
+            var result = await _backLogService.UpdateTaskStatusAsync(request);
+            return SetResult(result);
+        }
+
+
     }
 }

@@ -15,5 +15,8 @@ namespace GSRU_DataAccessLayer.Repositories.Interfaces
         Task<TaskTypeStatusResponse> GetTasksType();
         Task<TaskTypeStatusResponse> GetTaskStatus(int board_id);
         Task<GenericResponse<int>> StartSprint(int sprint_id, string sprint_goal);
+        Task<SprintDtoResponse> GetActiveSprint(int boardId);
+        Task<BoardConfigurationDtoResponse> GetBoardConfiguration(int team_id);
+        Task<GenericResponse<bool>> UpdateTaskStatus(int task_id, int status_id);
     }
 }

@@ -20,6 +20,8 @@ namespace GSRU_DataAccessLayer.Repositories
         private const string TEAMS_CREATE_SPRINT = "teams_create_sprint";
         private const string TASKS_CREATE = "tasks_create";
         private const string BACKLOG_START_SPRINT = "backlog_start_sprint";
+        private const string BOARD_GET_ACTIVE_SPRINT = "board_get_active_sprint";
+        private const string TASKS_CHANGE_STATUS = "tasks_change_status";
 
         public async Task<GenericResponse<int>> UpdateTaskSprintAndIndexAsync(TaskUpdateSprintAndIndexRequest request)
         {
@@ -95,6 +97,35 @@ namespace GSRU_DataAccessLayer.Repositories
                     return GenerateGenericError.Generate<BackLogDto>(HttpStatusCode.NotFound, "EMPLOYEE_NOT_FOUND");
                 }
                 return GenerateGenericError.GenerateInternalError<BackLogDto>(ex.Message);
+            }
+        }
+
+        public async Task<SprintDtoResponse> GetActiveSprint(int boardId)
+        {
+            try
+            {
+                using var result = await Connection.QueryMultipleAsync(
+                       sql: BOARD_GET_ACTIVE_SPRINT,
+                       param: new { p_board_id = boardId },
+                       commandType: CommandType.StoredProcedure,
+                       commandTimeout: 20,
+                       transaction: Transaction
+                   );
+                var sprint = await result.ReadFirstAsync<SprintDto>();
+                var tasks = (await result.ReadAsync<TaskBackLogDto>()).ToList();
+
+
+                foreach (var task in tasks)
+                {
+                    task.Children = tasks.Where(t => t.ParentId == task.Id);
+                }
+                sprint.Tasks = tasks.Where(t => t.SprintId == sprint.Id && t.ParentId is null).OrderBy(x => x.Index);
+                
+                return sprint;
+            }
+            catch (Exception ex)
+            {
+                return GenerateGenericError.GenerateInternalError<SprintDtoResponse>(ex.Message);
             }
         }
 
@@ -220,6 +251,32 @@ namespace GSRU_DataAccessLayer.Repositories
             }
         }
 
+
+        public async Task<BoardConfigurationDtoResponse> GetBoardConfiguration(int team_id)
+        {
+            try
+            {
+                var result = await Connection.QueryAsync<BoardConfigurationDto>(
+                   sql: @"
+  select blc.id, bl.name from boards as b
+	inner join board_list_configuration as blc on blc.board_id = b.id
+	inner join board_lists as bl on blc.board_list_id = bl.id where b.team_id = @team_id order by blc.id",
+                   param: new { team_id },
+                   commandType: CommandType.Text,
+                   commandTimeout: 20,
+                   transaction: Transaction
+               );
+                return new BoardConfigurationDtoResponse
+                {
+                    Configuration = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return GenerateGenericError.GenerateInternalError<BoardConfigurationDtoResponse>(ex.Message);
+            }
+        }
+
         public async Task<GenericResponse<int>> StartSprint(int sprint_id, string sprint_goal)
         {
             try
@@ -246,6 +303,26 @@ namespace GSRU_DataAccessLayer.Repositories
                     return GenerateGenericError.Generate<GenericResponse<int>>(HttpStatusCode.NotFound, "EMPLOYEE_NOT_FOUND");
                 }
                 return GenerateGenericError.GenerateInternalError<GenericResponse<int>>(ex.Message);
+            }
+        }
+
+        public async Task<GenericResponse<bool>> UpdateTaskStatus(int task_id, int status_id)
+        {
+            try
+            {
+                var result = await Connection.ExecuteAsync(
+                    sql: TASKS_CHANGE_STATUS,
+                    param: new { id = task_id, status = status_id },
+                    commandType: CommandType.StoredProcedure,
+                    commandTimeout: 20,
+                    transaction: Transaction
+                );
+
+                return new GenericResponse<bool> { Data = true };
+            }
+            catch (Exception ex)
+            {
+                return GenerateGenericError.GenerateInternalError<GenericResponse<bool>>(ex.Message);
             }
         }
     }
