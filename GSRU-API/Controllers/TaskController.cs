@@ -37,5 +37,41 @@ namespace GSRU_API.Controllers
             var result = await _taskService.AddTaskComments(request);
             return SetResult(result);
         }
+
+        [HttpPost]
+        [Route("add-task-attachments")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(GenericResponse<bool>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> AddTaskAttachments([FromForm] TaskAttachmentsRequest request)
+        {
+            var authorId = GetUserId();
+            var result = await _taskService.AddTaskAttachments(request, authorId);
+            return SetResult(result);
+        }
+
+        [HttpGet]
+        [Route("download-task-attachment/{id:int}")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        public async Task<IActionResult> DownlloadTaskAttachment([FromRoute] int id)
+        {
+            var result = await _taskService.GetTaskAttachments(id);
+            if(result.ApiError is not null)
+            {
+                return SetResult(result);
+            }
+
+            return File(result.Data.Bytes, "application/octet-stream", result.Data.FileName);
+        }
+
+        [HttpPost]
+        [Route("add-task-log-work")]
+        [ProducesErrorResponseType(typeof(GenericError<string>))]
+        [ProducesResponseType(typeof(GenericResponse<bool>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> AddTaskLogWork([FromBody] TaskWorkLogRequest request)
+        {
+            request.EmployeeId = GetUserId();
+            var result = await _taskService.AddTaskLogWork(request);
+            return SetResult(result);
+        }
     }
 }

@@ -41,6 +41,12 @@
         public string AuthorName { get; set; } = string.Empty;
     }
 
+    public class TaskAttachmentDownloadResponse
+    {
+        public byte[] Bytes { get; set; } = Array.Empty<byte>();
+        public string FileName { get; set; } = string.Empty;
+    }
+
     public class TaskComment
     {
         public int Id { get; set; }
@@ -63,5 +69,14 @@
         public int TaskId { get; set; }
         public int EmployeeId { get; set; }
         public string Comment { get; set; } = string.Empty;
+    }
+
+    public class TaskWorkLogRequest
+    {
+        public int TaskId { get; set; }
+        public int EmployeeId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

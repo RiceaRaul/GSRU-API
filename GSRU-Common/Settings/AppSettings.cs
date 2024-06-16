@@ -6,5 +6,6 @@ namespace GSRU_API.Common.Settings
     {
         public Jwt JWT { get; set; } = default!;
         public IEnumerable<string> CorsOrigins { get; set; } = Enumerable.Empty<string>();
+        public string UploadFilesPath { get; set; } = default!;
     }
 }
