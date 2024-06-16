@@ -14,6 +14,7 @@ namespace GSRU_API.BusinessLayer
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IBackLogService, BackLogService>();
             services.AddScoped<IWorklogService, WorklogService>();
+            services.AddScoped<ITaskService, TaskService>();
             DataAccessLayerConfiguration.RegisterDependencies(services);
         }
     }

@@ -16,6 +16,7 @@ namespace GSRU_DataAccessLayer.Implementations
         private ITeamsRepository? _teamsRepository;
         private IBackLogRepository? _backLogRepository;
         private IWorkloadRepository? _workloadRepository;
+        private ITaskRepository? _taskRepository;
 
         public UnitOfWork(IEncryptionService encryptionService)
         {
@@ -47,6 +48,10 @@ namespace GSRU_DataAccessLayer.Implementations
         {
             get { return _workloadRepository ??= new WorkloadRepository(_transaction!); }
         }
+        public ITaskRepository TaskRepository
+        {
+            get { return _taskRepository ??= new TaskRepository(_transaction!); }
+        }
 
         private void ResetRepositories()
         {
@@ -54,6 +59,7 @@ namespace GSRU_DataAccessLayer.Implementations
             _teamsRepository = null;
             _backLogRepository = null;
             _workloadRepository = null;
+            _taskRepository = null;
         }   
 
         public void Commit()

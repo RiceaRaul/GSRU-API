@@ -16,5 +16,52 @@
         public int Index { get; set; }
         public int SprintId { get; set; }
         public IEnumerable<TaskBackLogDto> Children { get; set; } = Enumerable.Empty<TaskBackLogDto>();
+
+        public IEnumerable<TaskAttachment> TaskAttachments { get; set; } = Enumerable.Empty<TaskAttachment>();
+        public IEnumerable<TaskComment> TaskComments { get; set; } = Enumerable.Empty<TaskComment>();
+        public IEnumerable<TaskAssignee> TaskAssignees { get; set; } = Enumerable.Empty<TaskAssignee>();
+    }
+
+    public class TaskDetails
+    {
+        public IEnumerable<TaskBackLogDto> Children { get; set; } = Enumerable.Empty<TaskBackLogDto>();
+
+        public IEnumerable<TaskAttachment> TaskAttachments { get; set; } = Enumerable.Empty<TaskAttachment>();
+        public IEnumerable<TaskComment> TaskComments { get; set; } = Enumerable.Empty<TaskComment>();
+        public IEnumerable<TaskAssignee> TaskAssignees { get; set; } = Enumerable.Empty<TaskAssignee>();
+    }
+
+    public class TaskAttachment
+    {
+        public int Id { get; set; }
+        public int TaskId { get; set; }
+        public string FileName { get; set; } = string.Empty;
+        public string FilePath { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
+        public string AuthorName { get; set; } = string.Empty;
+    }
+
+    public class TaskComment
+    {
+        public int Id { get; set; }
+        public int TaskId { get; set; }
+        public string Comment { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
+        public string AuthorName { get; set; } = string.Empty;
+    }
+
+    public class TaskAssignee
+    {
+        public int Id { get; set; }
+        public int TaskId { get; set; }
+        public int EmployeeId { get; set; }
+        public string EmployeeName { get; set; } = string.Empty;
+    }
+
+    public class TaskCommentsRequest
+    {
+        public int TaskId { get; set; }
+        public int EmployeeId { get; set; }
+        public string Comment { get; set; } = string.Empty;
     }
 }

@@ -22,6 +22,8 @@ namespace GSRU_DataAccessLayer.Repositories
         private const string BACKLOG_START_SPRINT = "backlog_start_sprint";
         private const string BOARD_GET_ACTIVE_SPRINT = "board_get_active_sprint";
         private const string TASKS_CHANGE_STATUS = "tasks_change_status";
+        private const string GETTASKDETAILS = "GetTaskDetails";
+
 
         public async Task<GenericResponse<int>> UpdateTaskSprintAndIndexAsync(TaskUpdateSprintAndIndexRequest request)
         {
@@ -80,6 +82,10 @@ namespace GSRU_DataAccessLayer.Repositories
                 };
                 foreach (var task in tasks)
                 {
+                    var taskDetails = await GetTaskDetails(task.Id);
+                    task.TaskAttachments = taskDetails.TaskAttachments;
+                    task.TaskComments = taskDetails.TaskComments;
+                    task.TaskAssignees = taskDetails.TaskAssignees;
                     task.Children = tasks.Where(t => t.ParentId == task.Id);
                 }
 
@@ -117,6 +123,10 @@ namespace GSRU_DataAccessLayer.Repositories
 
                 foreach (var task in tasks)
                 {
+                    var taskDetails = await GetTaskDetails(task.Id);
+                    task.TaskAttachments = taskDetails.TaskAttachments;
+                    task.TaskComments = taskDetails.TaskComments;
+                    task.TaskAssignees = taskDetails.TaskAssignees;
                     task.Children = tasks.Where(t => t.ParentId == task.Id);
                 }
                 sprint.Tasks = tasks.Where(t => t.SprintId == sprint.Id && t.ParentId is null).OrderBy(x => x.Index);
@@ -323,6 +333,36 @@ namespace GSRU_DataAccessLayer.Repositories
             catch (Exception ex)
             {
                 return GenerateGenericError.GenerateInternalError<GenericResponse<bool>>(ex.Message);
+            }
+        }
+
+        public async Task<TaskDetails> GetTaskDetails(int taskId)
+        {
+            var parameters = new DynamicParameters(new
+            {
+                TaskId = taskId
+            });
+
+            try
+            {
+                var queries = await Connection.QueryMultipleAsync(
+                    sql: GETTASKDETAILS,
+                    param: parameters,
+                    commandType: CommandType.StoredProcedure,
+                    commandTimeout: 20,
+                    transaction: Transaction
+                );
+
+                var taskDetails = new TaskDetails();
+                taskDetails.TaskAssignees = await queries.ReadAsync<TaskAssignee>();
+                taskDetails.TaskComments = await queries.ReadAsync<TaskComment>();
+                taskDetails.TaskAttachments = await queries.ReadAsync<TaskAttachment>();
+
+                return taskDetails;
+            }
+            catch
+            {
+                return null;
             }
         }
     }
